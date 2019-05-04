@@ -8,7 +8,7 @@ import (
 	"github.com/casualjim/dat"
 	"github.com/casualjim/dat/common"
 	"github.com/casualjim/dat/postgres"
-	"gopkg.in/stretchr/testify.v1/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestInsertKeywordColumnName(t *testing.T) {

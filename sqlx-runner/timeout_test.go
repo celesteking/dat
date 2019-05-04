@@ -6,7 +6,7 @@ import (
 
 	"github.com/mgutz/jo/v1"
 	"github.com/casualjim/dat"
-	"gopkg.in/stretchr/testify.v1/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 type TimeoutPerson struct {
