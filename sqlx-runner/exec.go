@@ -11,11 +11,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/casualjim/dat"
+	"github.com/casualjim/dat/kvs"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	guid "github.com/satori/go.uuid"
-	"gopkg.in/mgutz/dat.v1"
-	"gopkg.in/mgutz/dat.v1/kvs"
+	"go.uber.org/zap"
 )
 
 // database is the interface for sqlx's DB or Tx against which
@@ -65,35 +66,38 @@ func logSQLError(err error, msg string, statement string, args []interface{}) er
 		if !LogErrNoRows {
 			return err
 		}
+		lg := logger.With(zap.Error(err), zap.String("sql", statement), zap.String("args", toOutputStr(args)))
 		if dat.Strict {
-			return logger.Warn(msg, "err", err, "sql", statement, "args", toOutputStr(args))
+			lg.Warn(msg)
+			return err
 		}
-		if logger.IsDebug() {
-			logger.Debug(msg, "err", err, "sql", statement, "args", toOutputStr(args))
+		if logger.Core().Enabled(zap.DebugLevel) {
+			logger.Debug(msg)
 		}
 		return err
 	}
 
-	return logger.Error(msg, "err", err, "sql", statement, "args", toOutputStr(args))
+	logger.Error(msg, zap.Error(err), zap.String("sql", statement), zap.String("args", toOutputStr(args)))
+	return err
 }
 
 func logExecutionTime(start time.Time, sql string, args []interface{}) {
 	logged := false
-	if logger.IsWarn() {
+	if logger.Core().Enabled(zap.WarnLevel) {
 		elapsed := time.Since(start)
 		if LogQueriesThreshold > 0 && elapsed.Nanoseconds() > LogQueriesThreshold.Nanoseconds() {
 			if len(args) > 0 {
-				logger.Warn("SLOW query", "elapsed", fmt.Sprintf("%s", elapsed), "sql", sql, "args", toOutputStr(args))
+				logger.Warn("SLOW query", zap.Duration("elapsed", elapsed), zap.String("sql", sql), zap.String("args", toOutputStr(args)))
 			} else {
-				logger.Warn("SLOW query", "elapsed", fmt.Sprintf("%s", elapsed), "sql", sql)
+				logger.Warn("SLOW query", zap.Duration("elapsed", elapsed), zap.String("sql", sql))
 			}
 			logged = true
 		}
 	}
 
-	if logger.IsInfo() && !logged {
+	if logger.Core().Enabled(zap.InfoLevel) && !logged {
 		elapsed := time.Since(start)
-		logger.Info("Query time", "elapsed", fmt.Sprintf("%s", elapsed), "sql", sql)
+		logger.Info("Query time", zap.Duration("elapsed", elapsed), zap.String("sql", sql))
 	}
 }
 
@@ -124,7 +128,8 @@ func (ex *Execer) exec() (sql.Result, error) {
 func (ex *Execer) execFn() (sql.Result, error) {
 	fullSQL, args, err := ex.Interpolate()
 	if err != nil {
-		return nil, logger.Error("execFn.10", "err", err, "sql", fullSQL)
+		logger.Error("execFn.10", zap.Error(err), zap.String("sql", fullSQL))
+		return nil, err
 	}
 	defer logExecutionTime(time.Now(), fullSQL, args)
 
@@ -428,7 +433,7 @@ func (ex *Execer) queryStructs(dest interface{}) error {
 func (ex *Execer) queryStructsFn(dest interface{}) error {
 	fullSQL, args, blob, err := ex.cacheOrSQL()
 	if err != nil {
-		logger.Error("queryStructs.1: Could not convert to SQL", "err", err)
+		logger.Error("queryStructs.1: Could not convert to SQL", zap.Error(err))
 		return err
 	}
 	if blob != nil {
@@ -437,7 +442,7 @@ func (ex *Execer) queryStructsFn(dest interface{}) error {
 			return nil
 		}
 		// log it and let the query continue
-		logger.Warn("queryStructs.2: Could not unmarshal queryStruct cache data. Continuing with query", "err", err)
+		logger.Warn("queryStructs.2: Could not unmarshal queryStruct cache data. Continuing with query", zap.Error(err))
 	}
 
 	defer logExecutionTime(time.Now(), fullSQL, args)
@@ -582,7 +587,7 @@ func (ex *Execer) cacheOrSQL() (string, []interface{}, []byte, error) {
 		v, err := Cache.Get(ex.cacheID)
 		//logger.Warn("DBG cacheOrSQL.1 getting by id", "id", execer.cacheID, "v", v, "err", err)
 		if err != nil && err != kvs.ErrNotFound {
-			logger.Error("Unable to read cache key. Continuing with query", "key", ex.cacheID, "err", err)
+			logger.Error("Unable to read cache key. Continuing with query", zap.String("key", ex.cacheID), zap.Error(err))
 		} else if v != "" {
 			//logger.Warn("DBG cacheOrSQL.11 HIT", "v", v)
 			return "", nil, []byte(v), nil
@@ -632,10 +637,10 @@ func (ex *Execer) setCache(data interface{}, dataType int) {
 	case dtStruct:
 		b, err := json.Marshal(data)
 		if err != nil {
-			logger.Warn("Could not marshal data, clearing", "key", ex.cacheID, "err", err)
+			logger.Warn("Could not marshal data, clearing", zap.String("key", ex.cacheID), zap.Error(err))
 			err = Cache.Del(ex.cacheID)
 			if err != nil {
-				logger.Error("Could not delete cache key", "key", ex.cacheID, "err", err)
+				logger.Error("Could not delete cache key", zap.String("key", ex.cacheID), zap.Error(err))
 			}
 			return
 		}
@@ -649,7 +654,7 @@ func (ex *Execer) setCache(data interface{}, dataType int) {
 	//logger.Warn("DBG setting cache", "key", execer.cacheID, "data", string(b), "ttl", execer.cacheTTL)
 	err := Cache.Set(ex.cacheID, s, ex.cacheTTL)
 	if err != nil {
-		logger.Warn("Could not set cache. Query will proceed without caching", "err", err)
+		logger.Warn("Could not set cache. Query will proceed without caching", zap.Error(err))
 	}
 }
 

@@ -6,9 +6,11 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/lib/pq"
+	"go.uber.org/zap"
 )
 
 // UnsafeString is interpolated as an unescaped and unquoted value and should
@@ -189,7 +191,8 @@ func (n *NullTime) UnmarshalJSON(b []byte) error {
 			return n.Scan(t)
 		}
 	}
-	return logger.Error("Cannot parse time", "time", s, "formats", formats)
+	logger.Error("Cannot parse time", zap.String("time", s), zap.Strings("formats", formats))
+	return fmt.Errorf("cannot parse time %q for formats %+v", s, formats)
 }
 
 // UnmarshalJSON correctly deserializes a NullBool from JSON

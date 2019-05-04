@@ -4,14 +4,14 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/casualjim/dat"
+	"github.com/casualjim/dat/kvs"
+	"github.com/casualjim/dat/postgres"
 	"github.com/cenkalti/backoff"
-	"github.com/mgutz/logxi"
-	"gopkg.in/mgutz/dat.v1"
-	"gopkg.in/mgutz/dat.v1/kvs"
-	"gopkg.in/mgutz/dat.v1/postgres"
+	"go.uber.org/zap"
 )
 
-var logger logxi.Logger
+var logger *zap.Logger
 
 // LogQueriesThreshold is the threshold for logging "slow" queries
 var LogQueriesThreshold time.Duration
@@ -21,7 +21,7 @@ var LogErrNoRows bool
 
 func init() {
 	dat.Dialect = postgres.New()
-	logger = logxi.New("dat:sqlx")
+	logger = zap.L().Named("dat:sqlx")
 }
 
 // Cache caches query results.
@@ -44,7 +44,7 @@ func MustPing(db *sql.DB) {
 	// so operations that take a while to fail could run in quick succession.
 	for range ticker.C {
 		if err = db.Ping(); err != nil {
-			logger.Info("pinging database...", err.Error())
+			logger.Info("pinging database...", zap.Error(err))
 			continue
 		}
 

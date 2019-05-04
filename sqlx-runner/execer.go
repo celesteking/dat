@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/casualjim/dat"
 	"github.com/jmoiron/sqlx"
-	"gopkg.in/mgutz/dat.v1"
+	"go.uber.org/zap"
 )
 
 // Execer executes queries against a database.
@@ -81,7 +82,7 @@ func (ex *Execer) Cancel() error {
 
 	_, err := ex.execSQL(q, nil)
 	if err != nil {
-		logger.Error("While trying to cancel a query", err)
+		logger.Error("While trying to cancel a query", zap.Error(err))
 	}
 	return dat.ErrTimedout
 }

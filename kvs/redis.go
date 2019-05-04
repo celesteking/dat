@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/garyburd/redigo/redis"
+	"go.uber.org/zap"
 )
 
 func newRedisPool(host, password string) *redis.Pool {
@@ -39,7 +40,7 @@ func NewDefaultRedisStore() (KeyValueStore, error) {
 
 // NewRedisStore creates a new instance of RedisTokenStore.
 func NewRedisStore(ns string, host string, password string) (*RedisStore, error) {
-	logger.Info("Creating redis pool", "ns", ns, "host", host, "usingPassword", password == "")
+	logger.Info("Creating redis pool", zap.String("ns", ns), zap.String("host", host), zap.Bool("usingPassword", password == ""))
 	pool := newRedisPool(host, password)
 	return NewRedisStoreFromPool(ns, pool), nil
 }

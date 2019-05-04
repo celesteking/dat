@@ -3,8 +3,9 @@ package runner
 import (
 	"database/sql"
 
+	"github.com/casualjim/dat"
 	"github.com/jmoiron/sqlx"
-	"gopkg.in/mgutz/dat.v1"
+	"go.uber.org/zap"
 )
 
 // DB represents an abstract database connection pool.
@@ -38,7 +39,7 @@ func pgMustNotAllowEscapeSequence(conn *DB) {
 		logger.Fatal("Database allows escape sequences. Cannot be used with interpolation. "+
 			"standard_conforming_strings=%q\n"+
 			"See http://www.postgresql.org/docs/9.3/interactive/sql-syntax-lexical.html#SQL-SYNTAX-STRINGS-ESCAPE",
-			"standardConformingStrings", standardConformingStrings)
+			zap.String("standardConformingStrings", standardConformingStrings))
 	}
 }
 
@@ -73,11 +74,11 @@ func NewDB(db *sql.DB, driverName string) *DB {
 func NewDBFromString(driver string, connectionString string) *DB {
 	db, err := sql.Open(driver, connectionString)
 	if err != nil {
-		logger.Fatal("Database error ", "err", err)
+		logger.Fatal("Database error ", zap.Error(err))
 	}
 	err = db.Ping()
 	if err != nil {
-		logger.Fatal("Could not ping database", "err", err)
+		logger.Fatal("Could not ping database", zap.Error(err))
 	}
 	return NewDB(db, driver)
 }

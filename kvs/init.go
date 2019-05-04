@@ -1,9 +1,9 @@
 package kvs
 
-import "github.com/mgutz/logxi"
+import "go.uber.org/zap"
 
-var logger logxi.Logger
+var logger *zap.Logger
 
 func init() {
-	logger = logxi.New("dat.cache")
+	logger = zap.L().Named("dat:kvs")
 }
