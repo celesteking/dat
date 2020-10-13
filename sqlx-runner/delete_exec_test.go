@@ -3,7 +3,7 @@ package runner
 import (
 	"testing"
 
-	"github.com/casualjim/dat"
+	"github.com/celesteking/dat"
 	"github.com/stretchr/testify/assert"
 )
 

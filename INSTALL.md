@@ -16,9 +16,9 @@ If you are not using glide in your project
 ```sh
 cd $GOPATH/src
 # remove dir if it exists
-# rm -rf github.com/casualjim/dat
-git clone -b v1 https://github.com/mgutz/dat github.com/casualjim/dat
-cd github.com/casualjim/dat
+# rm -rf github.com/celesteking/dat
+git clone -b v1 https://github.com/mgutz/dat github.com/celesteking/dat
+cd github.com/celesteking/dat
 glide install
 ```
 
@@ -27,5 +27,5 @@ glide install
 If you are already using glide for your project
 
 ```sh
-glide get github.com/casualjim/dat
+glide get github.com/celesteking/dat
 ```

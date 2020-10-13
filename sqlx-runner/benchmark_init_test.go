@@ -1,6 +1,6 @@
 package runner
 
-import "github.com/casualjim/dat"
+import "github.com/celesteking/dat"
 
 func benchReset() {
 	var sql = `

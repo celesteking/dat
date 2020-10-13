@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/casualjim/dat"
+	"github.com/celesteking/dat"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )

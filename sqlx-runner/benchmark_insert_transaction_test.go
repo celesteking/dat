@@ -3,7 +3,7 @@ package runner
 import (
 	"testing"
 
-	"github.com/casualjim/dat"
+	"github.com/celesteking/dat"
 )
 
 // These benchmarks compare the total cost of interpolating the SQL then

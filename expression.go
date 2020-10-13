@@ -1,6 +1,6 @@
 package dat
 
-import "github.com/casualjim/dat/common"
+import "github.com/celesteking/dat/common"
 
 // Expression holds a sub expression.
 type Expression struct {

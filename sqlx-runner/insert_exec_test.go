@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/casualjim/dat"
-	"github.com/casualjim/dat/common"
-	"github.com/casualjim/dat/postgres"
+	"github.com/celesteking/dat"
+	"github.com/celesteking/dat/common"
+	"github.com/celesteking/dat/postgres"
 	"github.com/stretchr/testify/assert"
 )
 

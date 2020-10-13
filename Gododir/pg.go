@@ -11,8 +11,8 @@ import (
 	"github.com/mgutz/str"
 	do "gopkg.in/godo.v2"
 	"gopkg.in/godo.v2/util"
-	"github.com/casualjim/dat"
-	"github.com/casualjim/dat/sqlx-runner"
+	"github.com/celesteking/dat"
+	"github.com/celesteking/dat/sqlx-runner"
 )
 
 func mapBytesToString(m map[string]interface{}) {

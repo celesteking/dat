@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/mgutz/jo/v1"
-	"github.com/casualjim/dat"
+	"github.com/celesteking/dat"
 	"github.com/stretchr/testify/assert"
 )
 

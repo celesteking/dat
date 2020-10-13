@@ -14,7 +14,7 @@ import (
 	"github.com/mgutz/str"
 	"go.uber.org/zap"
 
-	"github.com/casualjim/dat/common"
+	"github.com/celesteking/dat/common"
 )
 
 // NameMapping is the routine to use when mapping column names to struct properties

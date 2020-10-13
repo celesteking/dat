@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/casualjim/dat"
-	"github.com/casualjim/dat/kvs"
-	"github.com/casualjim/dat/postgres"
+	"github.com/celesteking/dat"
+	"github.com/celesteking/dat/kvs"
+	"github.com/celesteking/dat/postgres"
 	"github.com/cenkalti/backoff"
 	"go.uber.org/zap"
 )

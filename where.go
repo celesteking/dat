@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/casualjim/dat/common"
+	"github.com/celesteking/dat/common"
 )
 
 // Eq is a map column -> value pairs which must be matched in a query

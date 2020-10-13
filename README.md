@@ -111,7 +111,7 @@ Earlier builds relied on gopkg.in which at the time was as good a solution as an
 Will move to `dep` once it is stable.
 
 ```sh
-glide get github.com/casualjim/dat/sqlx-runner
+glide get github.com/celesteking/dat/sqlx-runner
 ```
 
 Use it
@@ -121,8 +121,8 @@ import (
     "database/sql"
 
     _ "github.com/lib/pq"
-    "github.com/casualjim/dat"
-    "github.com/casualjim/dat/sqlx-runner"
+    "github.com/celesteking/dat"
+    "github.com/celesteking/dat/sqlx-runner"
 )
 
 // global database (pooling provided by SQL driver)
@@ -732,7 +732,7 @@ the database.
 
 ```go
 // key-value store (kvs) package
-import "github.com/casualjim/dat/kvs"
+import "github.com/celesteking/dat/kvs"
 
 func init() {
     // Redis: namespace is the prefix for keys and should be unique
