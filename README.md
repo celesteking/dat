@@ -1,5 +1,7 @@
 # dat
 
+**Hey! This is the v1 version of `dat` repo, but this time it IS working. Use with care.**
+
 [GoDoc](https://godoc.org/github.com/mgutz/dat)
 
 `dat` (Data Access Toolkit) is a fast, lightweight Postgres library for Go.
