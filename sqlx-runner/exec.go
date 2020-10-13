@@ -13,9 +13,9 @@ import (
 
 	"github.com/celesteking/dat"
 	"github.com/celesteking/dat/kvs"
+	guid "github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
-	guid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
